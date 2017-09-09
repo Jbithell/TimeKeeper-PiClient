@@ -36,6 +36,8 @@ while True:
         #Main program logic
         if stopOn():
             GPIO.output(17, GPIO.HIGH)
+        else:
+            GPIO.output(17, GPIO.LOW)
     else:
         #System Shut Down
         GPIO.output(2, GPIO.LOW)
