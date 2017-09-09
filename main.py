@@ -9,7 +9,7 @@ GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_UP) #EmergencyStop
 GPIO.setup(3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) #Key
 GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start
 GPIO.output(2, GPIO.HIGH)
-
+GPIO.output(17, GPIO.HIGH)
 
 while True:
     if GPIO.input(4):
