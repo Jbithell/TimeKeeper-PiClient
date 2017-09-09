@@ -12,16 +12,13 @@ GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start
 
 
 while True:
-    GPIO.output(17, GPIO.LOW)
-    GPIO.output(2, GPIO.HIGH)
-
-    if GPIO.input(4) == False:
+    if GPIO.input(4):
         print('Stop Button Pressed')
     if GPIO.input(3) == False:
         print('Key Switched')
     if GPIO.input(27) == False:
         print('Start Button Pressed')
 
-    GPIO.output(17, GPIO.HIGH)
+    GPIO.output(17, GPIO.LOW)
     GPIO.output(2, GPIO.LOW)
     time.sleep(1)
