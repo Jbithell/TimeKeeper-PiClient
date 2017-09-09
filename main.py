@@ -16,7 +16,10 @@ GPIO.output(17, GPIO.LOW)
 
 def keyOn():
     global GPIO
-    return GPIO.input(3)
+    if GPIO.input(3) == False:
+        return True
+    else:
+        return False
 def startOn():
     global GPIO
     if GPIO.input(17) == False:
