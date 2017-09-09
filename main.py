@@ -16,6 +16,8 @@ while True:
         print('Stop Button Pressed')
     if GPIO.input(3) == False:
         print('Key Switched')
+    if GPIO.input(3):
+        print('Key not Switched')
     if GPIO.input(27) == False:
         print('Start Button Pressed')
 
