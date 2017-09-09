@@ -8,7 +8,7 @@ GPIO.setup(17,GPIO.OUT) #RedLed
 GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_UP) #EmergencyStop
 GPIO.setup(3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) #Key
 GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start
-
+GPIO.output(2, GPIO.HIGH)
 
 
 while True:
@@ -20,5 +20,5 @@ while True:
         print('Start Button Pressed')
 
     GPIO.output(17, GPIO.LOW)
-    GPIO.output(2, GPIO.LOW)
+
     time.sleep(1)
