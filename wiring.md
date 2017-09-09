@@ -1,5 +1,6 @@
-| Orange/White | Grey | Gp2 | Yellow Light |
+| PhoneCable Colour | GPIO Link Colour | RPi Pin | Item
 | --- | --- | --- | --- |
+| Orange/White | Grey | Gp2 | Yellow Light |
 | Orange | Black | 6 | Earth |
 | Blue/White | Yellow (red tape) | Gp3 | Key Positive |
 | Green | Blue | Gp4 | Estop |
