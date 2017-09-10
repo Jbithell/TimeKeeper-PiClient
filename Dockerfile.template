@@ -5,6 +5,9 @@ RUN apt-get update && apt-get install -yq \
     nano \
     curl \
     xorg \
+    xserver-xorg-core \
+    xserver-xorg-input-all \
+    xserver-xorg-video-fbdev \
     fluxbox \
     libpng-dev \
     libfreetype6-dev \
@@ -15,8 +18,9 @@ RUN apt-get update && apt-get install -yq \
     python \
     python-dev \
     python-pip \
-    python-tk
-    python-setuptools
+    python-tk \
+    python-setuptools \
+    python-imaging-tk \
     python-imaging
 
 RUN pip install RPi.GPIO Pillow
