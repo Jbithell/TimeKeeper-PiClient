@@ -37,7 +37,7 @@ GPIO.setup(3, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Key
 GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start
 
 #                       Starting Values
-GPIO.output(2, GPIO.HIGH)
+GPIO.output(2, GPIO.LOW) #Start low so it's not so startling!
 GPIO.output(17, GPIO.LOW)
 #                       Functions
 def keyOn():
