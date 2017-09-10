@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -yq \
     python-dev \
     python-pip \
     python-tk \
-    python-setuptools \
     python-imaging-tk \
     python-imaging
 
