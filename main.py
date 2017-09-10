@@ -66,14 +66,10 @@ powerOffImage = ImageTk.PhotoImage(image)
 image = Image.open("images/loading.jpg")
 loadingImage = ImageTk.PhotoImage(image)
 
-'''
-label = tk.Label(frame, image=powerOffImage)
-label.image = powerOffImage
-label.pack(fill=tk.BOTH, expand=1)
-'''
-label = tk.Label(frame, image=loadingImage)
-label.image = loadingImage
-label.pack(fill=tk.BOTH, expand=1)
+powerOffLabel = tk.Label(frame, image=powerOffImage)
+powerOffLabel.image = powerOffImage
+loadingLabel = tk.Label(frame, image=loadingImage)
+loadingLabel.image = loadingImage
 
 
 
@@ -82,6 +78,10 @@ while True:
     root.update()
 
     if keyOn():
+        powerOffLabel.pack_forget()
+        root.configure(background='white')  # Set window background colour
+        loadingLabel.pack(fill=tk.BOTH, expand=1)
+
         GPIO.output(2, GPIO.HIGH)
         #Main program logic
         if stopOn():
@@ -92,3 +92,7 @@ while True:
         #System Shut Down
         GPIO.output(2, GPIO.LOW)
         GPIO.output(17, GPIO.LOW)
+
+        loadingLabel.pack_forget()
+        root.configure(background='black')  # Set window background colour
+        powerOffLabel.pack(fill=tk.BOTH, expand=1) #Show closed image
