@@ -75,8 +75,8 @@ label.pack(fill=tk.BOTH, expand=1)
 
 
 while True:
-    tk.update_idletasks()
-    tk.update()
+    root.update_idletasks()
+    root.update()
 
     if keyOn():
         GPIO.output(2, GPIO.HIGH)
