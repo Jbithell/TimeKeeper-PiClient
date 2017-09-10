@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-import Tkinter as tk
+import tkinter as tk
 from PIL import ImageTk, Image
 import os
 
