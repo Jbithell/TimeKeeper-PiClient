@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -yq \
     git \
     nano \
     curl \
+    tk-devel \
     python-tk \
     python-dev \
     python-imaging
