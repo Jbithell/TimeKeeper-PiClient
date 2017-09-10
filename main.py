@@ -25,7 +25,7 @@ class mainApp(object):
 root = tk.Tk()
 app = mainApp(root)
 frame = tk.Frame(root)
-frame.pack(expand=True)
+frame.pack(fill=tk.BOTH, expand=True)
 
 
 #       SETUP BUTTONS
@@ -66,11 +66,14 @@ powerOffImage = ImageTk.PhotoImage(image)
 image = Image.open("images/loading.jpg")
 loadingImage = ImageTk.PhotoImage(image)
 
-
+'''
 label = tk.Label(frame, image=powerOffImage)
 label.image = powerOffImage
 label.pack(fill=tk.BOTH, expand=1)
-
+'''
+label = tk.Label(frame, image=loadingImage)
+label.image = loadingImage
+label.pack(fill=tk.BOTH, expand=1)
 
 
 
