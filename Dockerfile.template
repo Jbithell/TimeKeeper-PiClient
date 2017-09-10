@@ -5,15 +5,10 @@ RUN apt-get update && apt-get install -yq \
     nano \
     curl \
     xorg \
-    xserver-xorg-core \
-    xserver-xorg-input-all \
-    xserver-xorg-video-fbdev \
     fluxbox \
     libpng-dev \
     libfreetype6-dev \
     pkg-config \
-    build-essential \
-    manpages-dev \
     libfreetype6-dev \
     tk-dev \
     python \
