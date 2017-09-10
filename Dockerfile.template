@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -yq \
     libfreetype6-dev \
     pkg-config \
     libfreetype6-dev \
-    tk-dev \
+    tk-dev tk tcl-dev tcl \
     python-tk \
     python-dev \
     python-imaging-tk \
