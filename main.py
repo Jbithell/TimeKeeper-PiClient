@@ -76,9 +76,9 @@ while True:
     root.update()
 
     if keyOn():
-        powerOffLabel.pack_forget()
         root.configure(background='white')  # Set window background colour
         loadingLabel.pack(fill=tk.BOTH, expand=1)
+        powerOffLabel.pack_forget()
 
         GPIO.output(2, GPIO.HIGH)
         #Main program logic
@@ -91,6 +91,6 @@ while True:
         GPIO.output(2, GPIO.LOW)
         GPIO.output(17, GPIO.LOW)
 
-        loadingLabel.pack_forget()
         root.configure(background='black')  # Set window background colour
         powerOffLabel.pack(fill=tk.BOTH, expand=1) #Show closed image
+        loadingLabel.pack_forget()
