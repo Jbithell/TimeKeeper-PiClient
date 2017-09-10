@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -yq \
     build-essential \
     manpages-dev \
     libfreetype6-dev \
+    tk-dev \
     python \
     python-dev \
     python-pip \
