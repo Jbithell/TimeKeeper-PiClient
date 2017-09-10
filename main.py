@@ -12,10 +12,8 @@ class mainApp(object):
         self.master = master
         pad = 3
         self._geom = '200x200+0+0'
-        master.geometry("{0}x{1}+0+0".format(
-            master.winfo_screenwidth() - pad, master.winfo_screenheight() - pad))
-        master.bind('<Escape>', self.toggle_geom)
-
+        master.geometry("{0}x{1}+0+0".format(master.winfo_screenwidth() - pad, master.winfo_screenheight() - pad))
+        master.configure(background='black')
     def toggle_geom(self, event):
         geom = self.master.winfo_geometry()
         print(geom, self._geom)
@@ -66,9 +64,9 @@ powerOffImage = ImageTk.PhotoImage(image)
 image = Image.open("images/loading.jpg")
 loadingImage = ImageTk.PhotoImage(image)
 
-powerOffLabel = tk.Label(frame, image=powerOffImage)
+powerOffLabel = tk.Label(frame, image=powerOffImage, bg='black')
 powerOffLabel.image = powerOffImage
-loadingLabel = tk.Label(frame, image=loadingImage)
+loadingLabel = tk.Label(frame, image=loadingImage, bg='black')
 loadingLabel.image = loadingImage
 
 
