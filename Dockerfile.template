@@ -4,9 +4,9 @@ RUN apt-get update && apt-get install -yq \
     git \
     nano \
     curl \
-    python2-tk \
-    python2-dev \
-    python2-imaging \
+    python-tk \
+    python-dev \
+    python-imaging
 
 RUN pip install RPi.GPIO Pillow
 
