@@ -67,9 +67,9 @@ image = Image.open("images/loading.jpg")
 loadingImage = ImageTk.PhotoImage(image)
 
 
-label = tk.Label(image=powerOffImage, expand=True)
+label = tk.Label(image=powerOffImage)
 label.image = powerOffImage
-label.pack(frame)
+label.pack(frame, expand=True)
 
 
 
