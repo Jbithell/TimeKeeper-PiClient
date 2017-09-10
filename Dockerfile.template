@@ -1,11 +1,14 @@
 FROM resin/%%RESIN_MACHINE_NAME%%-python
 
-#RUN apt-get update && apt-get install -yq \
-#    git \
-#    nano \
-#    curl
+RUN apt-get update && apt-get install -yq \
+    git \
+    nano \
+    curl \
+    python2-tk \
+    python2-dev \
+    python2-imaging \
 
-RUN pip install RPi.GPIO
+RUN pip install RPi.GPIO Pillow
 
 WORKDIR /usr/src/app
 COPY . ./
