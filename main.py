@@ -3,7 +3,7 @@ import time
 import tkinter as tk
 from PIL import ImageTk, Image
 import os
-
+import sys
 
 
 #       SETUP TKINTER
@@ -19,8 +19,11 @@ class mainApp(object):
         print(geom, self._geom)
         self.master.geometry(self._geom)
         self._geom = geom
+
+
 def keyboardInput(event):
     print "pressed", repr(event.char)
+
 root = tk.Tk()
 app = mainApp(root)
 frame = tk.Frame(root)
@@ -41,6 +44,7 @@ GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start
 #                       Starting Values
 GPIO.output(2, GPIO.LOW) #Start low so it's not so startling!
 GPIO.output(17, GPIO.LOW)
+mode = 0 #Modes (0OFF,1MAINMENU,2PROJECTSELECT,3=TRACKINGTIME)
 #                       Functions
 def keyOn():
     global GPIO
@@ -77,22 +81,51 @@ while True:
     root.update_idletasks()
     root.update()
 
-    if keyOn():
+    if keyOn() != True:
+        mode = 0
+    if mode == 0 and keyOn():
+        GPIO.output(2, GPIO.HIGH) #Power on light
+        mode = 1 #boot
+
+    if mode == 0:
+        # System Shut Down
+        GPIO.output(2, GPIO.LOW)
+        GPIO.output(17, GPIO.LOW)
+
+        for item in frame.winfo_children():
+            #Clear the frame
+            item.pack_forget()
+        root.configure(background='black')  # Set window background colour
+        powerOffLabel.pack(fill=tk.BOTH, expand=1)  # Show closed image
+    elif mode == 1:
+        for item in frame.winfo_children():
+            #Clear the frame
+            item.pack_forget()
         root.configure(background='white')  # Set window background colour
         loadingLabel.pack(fill=tk.BOTH, expand=1)
-        powerOffLabel.pack_forget()
 
-        GPIO.output(2, GPIO.HIGH)
+        time.sleep(2) #Loading
+
+        mode = 2 #Skip straight to timekeeper from main menu
+    elif mode == 2:
+        frame.configure(background='white')  # Set window background colour
+        for item in frame.winfo_children():
+            #Clear the frame
+            item.pack_forget()
+        #Main program logic
+        if stopOn():
+            GPIO.output(17, GPIO.HIGH)
+        else:
+            GPIO.output(17, GPIO.LOW)
+    elif mode == 3:
+        root.configure(background='black')  # Set window background colour
+        for item in frame.winfo_children():
+            #Clear the frame
+            item.pack_forget()
         #Main program logic
         if stopOn():
             GPIO.output(17, GPIO.HIGH)
         else:
             GPIO.output(17, GPIO.LOW)
     else:
-        #System Shut Down
-        GPIO.output(2, GPIO.LOW)
-        GPIO.output(17, GPIO.LOW)
-
-        root.configure(background='black')  # Set window background colour
-        powerOffLabel.pack(fill=tk.BOTH, expand=1) #Show closed image
-        loadingLabel.pack_forget()
+        sys.exit()
