@@ -109,7 +109,7 @@ def flashLED(pin,frequency=0.1,state=None):
         GPIO.output(pin, GPIO.LOW)
         state = True #Set for next time
 
-    root.after((frequency*1000)/2, flashLED, pin, frequency, state) #Tell it to set a new state to this again after half the frequency
+    root.after(int((frequency*1000)/2), flashLED, pin, frequency, state) #Tell it to set a new state to this again after half the frequency
 
 def setMode(newMode):
     global mode, previousMode,root,frame,labels,GPIO
