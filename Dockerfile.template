@@ -19,8 +19,9 @@ RUN apt-get update && apt-get install -yq \
     git \
     libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev imagemagick
 
-RUN pip3 install RPi.GPIO Pillow
+RUN pip3 install RPi.GPIO Pillow Flask==0.10.1
 
+COPY tty-input.conf /etc/systemd/system/launch.service.d/tty-input.conf # Force tty1 to attach
 WORKDIR /usr/src/app
 COPY . ./
 
