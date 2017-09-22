@@ -82,6 +82,7 @@ def setMode(newMode):
     global mode, previousMode,root,frame,labels
     previousMode = mode
     mode = newMode
+    print("Moved to " + str(mode) + " mode")
     for item in frame.winfo_children():
         # Clear the frame
         item.pack_forget()
