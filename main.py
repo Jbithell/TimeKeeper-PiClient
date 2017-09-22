@@ -22,7 +22,7 @@ class mainApp(object):
 
 
 def keyboardInput(event):
-    print "pressed", repr(event.char)
+    print(repr(event.char))
 
 root = tk.Tk()
 app = mainApp(root)
