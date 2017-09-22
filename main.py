@@ -20,7 +20,6 @@ class mainApp(object):
         self.master.geometry(self._geom)
         self._geom = geom
 
-
 def keyboardInput(event):
     key = str(event.char)
 
@@ -93,9 +92,12 @@ def stopFlash(pin):
 def flashLED(pin,frequency=0.1,state=None):
     global GPIO,root, stopFlashVar
 
-    if stopFlashVar[pin]:
+    if pin not in stopFlashVar:
+        stopFlashVar[pin] = False #Set a value for it
+    elif stopFlashVar[pin]:
+        stopFlashVar[pin] = False #Reset for next time
         return False
-    stopFlashVar[pin] = False
+
 
     if state is None:
         state = True
