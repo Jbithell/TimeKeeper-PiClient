@@ -118,11 +118,11 @@ while True:
             GPIO.output(2, GPIO.HIGH)  # Power on light
             setMode(1) #Turn it on
     elif mode == 1: #Main Menu
-        for i in range(1,20):
+        for i in range(1,10):
             GPIO.output(2, GPIO.LOW)
-            time.sleep(0.05)
+            time.sleep(0.1)
             GPIO.output(2, GPIO.HIGH)
-            time.sleep(0.05)
+            time.sleep(0.1)
         setMode(2) #Skip straight to timekeeper from main menu
     elif mode == 2: #Select project screen
         pass
