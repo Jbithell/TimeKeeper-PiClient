@@ -22,7 +22,14 @@ class mainApp(object):
 
 
 def keyboardInput(event):
-    print(repr(event.char))
+    key = str(repr(event.char))
+
+    if key == '\x08':
+        key = "-" #Manually correct key
+
+    if key != '':
+        print(key)
+
 
 root = tk.Tk()
 app = mainApp(root)
