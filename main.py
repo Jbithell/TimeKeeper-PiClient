@@ -25,7 +25,7 @@ def keyboardInput(event):
     key = str(event.char)
 
     if key == '\x08':
-        key = "-" #Manually correct key
+        key = "!" #Manually correct key backspace to exclamation mark otherwise it doesn't work
 
     if key != '':
         print(key)
@@ -105,6 +105,8 @@ def setMode(newMode):
         root.configure(background='white')
     elif mode == 3:
         pass
+
+setMode(0) #You have to "boot" into the powered off state
 while True:
     root.update_idletasks()
     root.update()
