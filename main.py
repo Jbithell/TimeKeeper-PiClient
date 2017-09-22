@@ -94,8 +94,9 @@ powerOffLabel.image = powerOffImage
 loadingLabel = tk.Label(frame, image=loadingImage, bg='black')
 loadingLabel.image = loadingImage
 
+print("Awaiting input")
 print(keyboardInput(8,60))
-
+print("Not awaiting input")
 
 while True:
     root.update_idletasks()
