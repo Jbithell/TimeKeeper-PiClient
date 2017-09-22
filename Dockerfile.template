@@ -1,5 +1,8 @@
 FROM resin/%%RESIN_MACHINE_NAME%%-python
 
+# Force tty1 to attach
+COPY tty-input.conf /etc/systemd/system/launch.service.d/tty-input.conf
+
 RUN apt-get update && apt-get install -yq \
     xorg \
     fluxbox \
@@ -33,7 +36,6 @@ RUN echo "#!/bin/bash" > /etc/X11/xinit/xserverrc \
   && echo 'exec /usr/bin/X -s 0 dpms -nocursor -nolisten tcp "$@"' >> /etc/X11/xinit/xserverrc
 
 #ENV INITSYSTEM on  #To make below work
-COPY tty-input.conf /etc/systemd/system/launch.service.d/tty-input.conf # Force tty1 to attach
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 CMD ["bash","/usr/src/app/start.sh"]
