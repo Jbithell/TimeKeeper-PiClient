@@ -79,13 +79,13 @@ labels["loading"] = tk.Label(frame, image=loadingImage, bg='black')
 labels["loading"].image = loadingImage
 
 def setMode(newMode):
-    global mode, previousMode,root,frame,labels
+    global mode, previousMode,root,frame,labels,GPIO
     previousMode = mode
     mode = newMode
     print("Moved to " + str(mode) + " mode")
     for item in frame.winfo_children():
-        # Clear the frame
-        item.pack_forget()
+        item.pack_forget() #Clear the frame
+
     if mode == 0:
         GPIO.output(2, GPIO.LOW)
         GPIO.output(17, GPIO.LOW)
@@ -109,7 +109,11 @@ while True:
             GPIO.output(2, GPIO.HIGH)  # Power on light
             setMode(1) #Turn it on
     elif mode == 1: #Main Menu
-        time.sleep(2) #Loading
+        for i in range(1,20):
+            GPIO.output(2, GPIO.LOW)
+            time.sleep(0.05)
+            GPIO.output(2, GPIO.HIGH)
+            time.sleep(0.05)
         setMode(2) #Skip straight to timekeeper from main menu
     elif mode == 2: #Select project screen
         pass
