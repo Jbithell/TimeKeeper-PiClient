@@ -1,4 +1,4 @@
-FROM resin/%%RESIN_MACHINE_NAME%%-python
+FROM resin/%%RESIN_MACHINE_NAME%%-debian
 
 # Force tty1 to attach
 COPY tty-input.conf /etc/systemd/system/launch.service.d/tty-input.conf
