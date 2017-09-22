@@ -27,6 +27,7 @@ def keyboardInput(event):
 root = tk.Tk()
 app = mainApp(root)
 frame = tk.Frame(root)
+frame.focus_set() #Give it focus so keyboard works
 frame.bind("<Key>", keyboardInput)
 frame.pack(fill=tk.BOTH, expand=True)
 
