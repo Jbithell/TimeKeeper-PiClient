@@ -54,6 +54,7 @@ GPIO.output(2, GPIO.LOW) #Start low so it's not so startling!
 GPIO.output(17, GPIO.LOW)
 mode = 0 #Modes (0OFF,1MAINMENU,2PROJECTSELECT,3=TRACKINGTIME)
 previousMode = 0
+stopFlashVar = {}
 labels = {} #Images etc.
 #                       Functions
 def keyOn():
@@ -84,6 +85,29 @@ labels["powerOff"] = tk.Label(frame, image=powerOffImage, bg='black')
 labels["powerOff"].image = powerOffImage
 labels["loading"] = tk.Label(frame, image=loadingImage, bg='black')
 labels["loading"].image = loadingImage
+
+def stopFlash(pin):
+    global stopFlashVar
+    stopFlashVar[pin] = True
+    GPIO.output(pin, GPIO.LOW) #Set it to low after the flashing
+def flashLED(pin,frequency=0.1,state=None):
+    global GPIO,root, stopFlashVar
+
+    if stopFlashVar[pin]:
+        return False
+    stopFlashVar[pin] = False
+
+    if state is None:
+        state = True
+
+    if state is True:
+        GPIO.output(pin, GPIO.HIGH)
+        state = False #Set for next time
+    else:
+        GPIO.output(pin, GPIO.LOW)
+        state = True #Set for next time
+
+    root.after((frequency*1000)/2, flashLED(pin, frequency, state)) #Tell it to set a new state to this again after half the frequency
 
 def setMode(newMode):
     global mode, previousMode,root,frame,labels,GPIO
@@ -118,13 +142,12 @@ while True:
             GPIO.output(2, GPIO.HIGH)  # Power on light
             setMode(1) #Turn it on
     elif mode == 1: #Main Menu
-        for i in range(1,10):
-            GPIO.output(2, GPIO.LOW)
-            time.sleep(0.1)
-            GPIO.output(2, GPIO.HIGH)
-            time.sleep(0.1)
+        flashLED(2, 0.1)
+        time.sleep(30)
+        stopFlash(2)
         setMode(2) #Skip straight to timekeeper from main menu
     elif mode == 2: #Select project screen
+
         pass
     elif mode == 3: #Timing screen
         pass
