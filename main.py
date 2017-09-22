@@ -144,7 +144,7 @@ while True:
             GPIO.output(2, GPIO.HIGH)  # Power on light
             setMode(1) #Turn it on
     elif mode == 1: #Main Menu
-        flashLED(2, 0.1)
+        flashLED(2, 2)
         time.sleep(30)
         stopFlash(2)
         setMode(2) #Skip straight to timekeeper from main menu
