@@ -3,8 +3,7 @@ import time
 import tkinter as tk
 from PIL import ImageTk, Image
 import os
-
-
+import termios, fcntl, sys, os, select #Keyboard imports for Resin.io (https://github.com/shaunmulligan/resin-keyboard-example/blob/master/src/main.py)
 
 #       SETUP TKINTER
 class mainApp(object):
@@ -36,10 +35,36 @@ GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_UP) #EmergencyStop
 GPIO.setup(3, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Key
 GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start
 
+#       SETUP KEYBOARD
+keyboard = {}
+keyboard["fd"] = sys.stdin.fileno()
+keyboard["oldterm"] = termios.tcgetattr(keyboard["fd"])
+keyboard["newattr"] = termios.tcgetattr(keyboard["fd"])
+keyboard["newattr"][3] = keyboard["newattr"][3] & ~termios.ICANON & ~termios.ECHO
+termios.tcsetattr(keyboard["fd"], termios.TCSANOW, keyboard["newattr"])
+keyboard["oldflags"] = fcntl.fcntl(keyboard["fd"], fcntl.F_GETFL)
+fcntl.fcntl(keyboard["fd"], fcntl.F_SETFL, keyboard["oldflags"] | os.O_NONBLOCK)
+def keyboardInput(numberDigits,timeout):
+    #Timeout in seconds
+    #https://stackoverflow.com/a/2904057/3088158
+    output = []
+    for n in range(1, numberDigits):
+        #Loop over the number of digits needed
+        i, o, e = select.select([sys.stdin], [], [], timeout)
+        if (i):
+            #Append an input to list if you get one
+            output.append(sys.stdin.readline().strip())
+        else:
+            #return false on timeout
+            return False
+    return output
+
+
 #                       Starting Values
 GPIO.output(2, GPIO.LOW) #Start low so it's not so startling!
 GPIO.output(17, GPIO.LOW)
-#                       Functions
+mode = 0 #Modes (0OFF,1MAINMENU,2PROJECTSELECT,3=TRACKINGTIME)
+#                       PHYSICAL BUTTONS
 def keyOn():
     global GPIO
     if GPIO.input(3) == False:
@@ -69,6 +94,7 @@ powerOffLabel.image = powerOffImage
 loadingLabel = tk.Label(frame, image=loadingImage, bg='black')
 loadingLabel.image = loadingImage
 
+print(keyboardInput(8,60))
 
 
 while True:
