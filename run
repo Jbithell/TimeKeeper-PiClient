@@ -40,7 +40,7 @@ echo "Waiting for X to be ready"
 export DISPLAY=:0
 
 # Setting wallpaper and polling X in one!
-while ! feh --bg-scale /etc/wallpaper.png; do sleep 1; done
+while ! feh --bg-scale /usr/src/app/images/loading.jpg; do sleep 1; done
 matchbox-window-manager -use_cursor no &
 
 while ! curl -sf -o /dev/null "$URL"; do sleep 1; done
