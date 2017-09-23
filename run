@@ -1,0 +1,54 @@
+#!/bin/bash
+# set -euo pipefail
+set -x
+URL=${URL:-/usr/src/app/website/index.html}
+
+export PASS=${PASS:=root}
+echo "root:$PASS" | chpasswd
+
+rm -rf /tmp/*
+
+if [ -n "$REMOTE_HOST" ]; then
+  cat <<EOF > /etc/openvpn.conf
+client
+nobind
+remote-random
+remote $REMOTE_HOST $REMOTE_PORT
+proto tcp
+mute 5
+dev tun
+<ca>
+$( echo -e "$CERT" )
+</ca>
+auth-user-pass /etc/openvpn.credentials
+EOF
+  ( umask 0077; echo -e "${VPN_USER}\n${VPN_PASS}" > /etc/openvpn.credentials )
+  openvpn --config /etc/openvpn.conf &
+fi
+
+if ! [ -e "/etc/dropbear/dropbear_ecdsa_host_key" ]; then
+  dropbearkey -t ecdsa -f /etc/dropbear/dropbear_ecdsa_host_key
+fi
+
+dropbear -E -F &
+DB_PID=$!
+
+Xorg &
+X_PID=$!
+
+echo "Waiting for X to be ready"
+export DISPLAY=:0
+
+# Setting wallpaper and polling X in one!
+while ! feh --bg-scale /etc/wallpaper.png; do sleep 1; done
+matchbox-window-manager -use_cursor no &
+
+while ! curl -sf -o /dev/null "$URL"; do sleep 1; done
+
+xset -dpms
+xset s off
+xset s noblank
+
+iceweasel "$URL"
+
+npm start
