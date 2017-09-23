@@ -3,6 +3,8 @@
 set -x
 URL=${URL:-/usr/src/app/website/index.html}
 
+forever server.js #Actually start the server!
+
 export PASS=${PASS:=root}
 echo "root:$PASS" | chpasswd
 
@@ -51,4 +53,5 @@ xset s noblank
 
 iceweasel "$URL"
 
-npm start
+
+sleep infinity
