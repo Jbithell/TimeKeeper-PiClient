@@ -101,7 +101,7 @@ def flashLED(pin,frequency=0.1,state=None):
 
     if state is None:
         state = True
-
+    print("Flashing LED to state " + str(state))
     if state is True:
         GPIO.output(pin, GPIO.HIGH)
         state = False #Set for next time
