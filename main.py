@@ -3,12 +3,9 @@ import tkinter as tk
 from PIL import ImageTk, Image
 import os
 import sys
-if os.environ.get('emulatorMode', True) == False:
-    import RPi.GPIO as GPIO
-
-
 if os.environ.get('emulatorMode', True):
     emulatorMode = True #Set in this dodgy if statement type way in case it's not defined as a proper true/false
+    import RPi.GPIO as GPIO
 else:
     emulatorMode = False
 
