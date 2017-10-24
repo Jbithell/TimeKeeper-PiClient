@@ -1,9 +1,16 @@
-import RPi.GPIO as GPIO
 import time
 import tkinter as tk
 from PIL import ImageTk, Image
 import os
 import sys
+if os.environ.get('emulatorMode', True) == False:
+    import RPi.GPIO as GPIO
+
+
+if os.environ.get('emulatorMode', True):
+    emulatorMode = True #Set in this dodgy if statement type way in case it's not defined as a proper true/false
+else:
+    emulatorMode = False
 
 
 #       SETUP TKINTER
@@ -39,39 +46,48 @@ frame.pack(fill=tk.BOTH, expand=True)
 
 
 #       SETUP BUTTONS
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-GPIO.setup(2,GPIO.OUT) #YellowLed
-GPIO.setup(17,GPIO.OUT) #RedLed
+if (emulatorMode != True):
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    GPIO.setup(2,GPIO.OUT) #YellowLed
+    GPIO.setup(17,GPIO.OUT) #RedLed
 
-GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_UP) #EmergencyStop
-GPIO.setup(3, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Key
-GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start
+    GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_UP) #EmergencyStop
+    GPIO.setup(3, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Key
+    GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start
 
 #                       Starting Values
-GPIO.output(2, GPIO.LOW) #Start low so it's not so startling!
-GPIO.output(17, GPIO.LOW)
+if (emulatorMode != True):
+    GPIO.output(2, GPIO.LOW) #Start low so it's not so startling!
+    GPIO.output(17, GPIO.LOW)
 mode = 0 #Modes (0OFF,1MAINMENU,2PROJECTSELECT,3=TRACKINGTIME)
 previousMode = 0
-stopFlashVar = {}
 labels = {} #Images etc.
 #                       Functions
 def keyOn():
-    global GPIO
-    if GPIO.input(3) == False:
-        return True
+    if (emulatorMode != True):
+        global GPIO
+        if GPIO.input(3) == False:
+            return True
+        else:
+            return False
     else:
         return False
 def startOn():
-    global GPIO
-    if GPIO.input(17) == False:
-        return True
+    if (emulatorMode != True):
+        global GPIO
+        if GPIO.input(17) == False:
+            return True
+        else:
+            return False
     else:
         return False
 def stopOn():
-    global GPIO
-    return GPIO.input(4)
-
+    if (emulatorMode != True):
+        global GPIO
+        return GPIO.input(4)
+    else:
+        return False
 
 #   MAIN PROGRAM
 
@@ -84,32 +100,6 @@ labels["powerOff"] = tk.Label(frame, image=powerOffImage, bg='black')
 labels["powerOff"].image = powerOffImage
 labels["loading"] = tk.Label(frame, image=loadingImage, bg='black')
 labels["loading"].image = loadingImage
-
-def stopFlash(pin):
-    global stopFlashVar
-    stopFlashVar[pin] = True
-    GPIO.output(pin, GPIO.LOW) #Set it to low after the flashing
-def flashLED(pin,frequency=0.1,state=None):
-    global GPIO,root, stopFlashVar
-
-    if pin not in stopFlashVar:
-        stopFlashVar[pin] = False #Set a value for it
-    elif stopFlashVar[pin]:
-        stopFlashVar[pin] = False #Reset for next time
-        return False
-
-
-    if state is None:
-        state = True
-    print("Flashing LED to state " + str(state))
-    if state is True:
-        GPIO.output(pin, GPIO.HIGH)
-        state = False #Set for next time
-    else:
-        GPIO.output(pin, GPIO.LOW)
-        state = True #Set for next time
-
-    root.after(int((frequency*1000)/2), flashLED, pin, frequency, state) #Tell it to set a new state to this again after half the frequency
 
 def setMode(newMode):
     global mode, previousMode,root,frame,labels,GPIO
@@ -144,9 +134,6 @@ while True:
             GPIO.output(2, GPIO.HIGH)  # Power on light
             setMode(1) #Turn it on
     elif mode == 1: #Main Menu
-        flashLED(2, 2)
-        time.sleep(30)
-        stopFlash(2)
         setMode(2) #Skip straight to timekeeper from main menu
     elif mode == 2: #Select project screen
 
