@@ -1,29 +1,9 @@
 #!/usr/bin/python
-'''
+
 import termios, fcntl, sys, os
-fd = sys.stdin.fileno()
-
-oldterm = termios.tcgetattr(fd)
-newattr = termios.tcgetattr(fd)
-newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
-termios.tcsetattr(fd, termios.TCSANOW, newattr)
-
-oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
-fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
-
-try:
-    while 1:
-        try:
-            c = sys.stdin.read(1)
-            print "Got character", repr(c)
-        except IOError: pass
-finally:
-    termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
-    fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
-'''
 import time
 import Adafruit_CharLCD as LCD
-
+fd = sys.stdin.fileno() #Start system to gather text
 
 # Raspberry Pi configuration:
 lcd_rs = 27  # Change this to pin 21 on older revision Raspberry Pi's
@@ -43,7 +23,7 @@ lcd_rows    = 2
 lcd = LCD.Adafruit_RGBCharLCD(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7,
                               lcd_columns, lcd_rows, lcd_red, lcd_green, lcd_blue)
 
-# Show some basic colors.
+print("DATA")
 while True:
     lcd.set_color(1.0, 0.0, 0.0)
     lcd.clear()
@@ -79,3 +59,26 @@ while True:
     lcd.clear()
     lcd.message('WHITE')
     time.sleep(3.0)
+
+
+    '''
+    
+oldterm = termios.tcgetattr(fd)
+newattr = termios.tcgetattr(fd)
+newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+termios.tcsetattr(fd, termios.TCSANOW, newattr)
+
+oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+
+try:
+    while 1:
+        try:
+            c = sys.stdin.read(1)
+            print "Got character", repr(c)
+        except IOError: pass
+finally:
+    termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
+    fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+
+'''
