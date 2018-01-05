@@ -1,1 +1,1 @@
-# TimeKeeper4 - Project time tracking system
+# TimeKeeper6 - Project time tracking system
