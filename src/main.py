@@ -1,7 +1,7 @@
 import termios, fcntl, sys, os
 import time
-#import serial
-# fd = sys.stdin.fileno()  # Start system to gather text
+import serial
+#fd = sys.stdin.fileno()  # Start system to gather text
 
 print("Waking LCD")
 port = serial.Serial(
