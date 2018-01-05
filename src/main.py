@@ -27,36 +27,43 @@ while True:
     lcd.set_color(1.0, 0.0, 0.0)
     lcd.clear()
     lcd.message('RED')
+    print("Red")
     time.sleep(3.0)
 
     lcd.set_color(0.0, 1.0, 0.0)
     lcd.clear()
     lcd.message('GREEN')
+    print("Green")
     time.sleep(3.0)
 
     lcd.set_color(0.0, 0.0, 1.0)
     lcd.clear()
     lcd.message('BLUE')
+    print("Blue")
     time.sleep(3.0)
 
     lcd.set_color(1.0, 1.0, 0.0)
     lcd.clear()
     lcd.message('YELLOW')
+    print("Yellow")
     time.sleep(3.0)
 
     lcd.set_color(0.0, 1.0, 1.0)
     lcd.clear()
     lcd.message('CYAN')
+    print("CYAN")
     time.sleep(3.0)
 
     lcd.set_color(1.0, 0.0, 1.0)
     lcd.clear()
     lcd.message('MAGENTA')
+    print("MAG")
     time.sleep(3.0)
 
     lcd.set_color(1.0, 1.0, 1.0)
     lcd.clear()
     lcd.message('WHITE')
+    print("White")
     time.sleep(3.0)
 
     '''
