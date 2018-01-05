@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 import termios, fcntl, sys, os
 import time
 import Adafruit_CharLCD as LCD
