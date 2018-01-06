@@ -87,11 +87,29 @@ def getSessionData(projectID):
     return [projectID, "TEST TEST TEST", 3452948576]
 
 def is_int(input):
-  try:
-    num = int(input)
-  except ValueError:
-    return False
-  return True
+    try:
+        num = int(input)
+    except ValueError:
+        return False
+    return True
+def hoursMinutesSeconds(input):
+    #https://stackoverflow.com/questions/775049/python-time-seconds-to-hms
+    m, s = divmod(seconds, input)
+    h, m = divmod(m, input)
+    if (h < 1):
+        h = "00"
+    if (m < 1):
+        m = "00"
+    if (s < 1):
+        s = "00"
+
+    if (h < 10):
+        h = "0" + str(h) #Pad
+    if (m < 10):
+        m = "0" + str(m) #Pad
+    if (s < 10):
+        s = "0" + str(s)  # Pad
+    return h,m,s
 #                   End
 
 #                   Start main loop
@@ -135,7 +153,7 @@ while True:
             print("Loading " + projectIDEntered)
             lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
             sessionData = getSessionData(projectIDEntered)
-            lcdprint(sessionData[1] + time.strftime("%H:%M:%S", time.gmtime(sessionData[2])) + "   READY")
+            lcdprint(sessionData[1] + "%d:%d:%d" % (hoursMinutesSeconds(sessionData[2])) + "   READY")
             currentMode = 2 #Session start/running page
     elif currentMode == 2:
         if sessionRunning:
@@ -165,7 +183,7 @@ while True:
                 sessionTimerTemp = sessionTimer + (time.time() - sessionLastStart)
             else:
                 sessionTimerTemp = sessionTimer
-            lcdprint(sessionData[1] + time.strftime("%H:%M", time.gmtime(sessionData[2] + sessionTimerTemp)) + "   " + time.strftime("%H:%M:%S", time.gmtime(sessionTimerTemp)))
+            lcdprint(sessionData[1] + "%d:%02d" % (hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "%d:%02d:%02d" % (hoursMinutesSeconds(sessionTimerTemp)))
             time.sleep(0.5) #Try not to kill LCD
         else:
             if GPIO.input(stopSWITCH):
