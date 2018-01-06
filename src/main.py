@@ -90,6 +90,8 @@ def getSessionData(projectID):
 #                   Start main loop
 currentMode = 0 #powered off
 while True:
+    print(GPIO.input(keySWITCH),GPIO.input(startBUTTON),GPIO.input(stopSWITCH))
+while True:
     print("MODE " + str(currentMode))
     if GPIO.input(keySWITCH): #System is powered down
         if currentMode != 0:
