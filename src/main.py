@@ -163,7 +163,7 @@ while True:
             print("Loading " + projectIDEntered)
             lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
             sessionData = getSessionData(projectIDEntered)
-            lcdprint(sessionData[1] + "${0}:${1}:${2}".format(hoursMinutesSeconds(sessionData[2])) + "   READY")
+            lcdprint(sessionData[1] + "{}:{}:{}".format(hoursMinutesSeconds(sessionData[2])) + "   READY")
             currentMode = 2 #Session start/running page
     elif currentMode == 2:
         if sessionRunning:
@@ -193,7 +193,7 @@ while True:
                 sessionTimerTemp = sessionTimer + (time.time() - sessionLastStart)
             else:
                 sessionTimerTemp = sessionTimer
-            lcdprint(sessionData[1] + "${0}:${1}".format(hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "${0}:${1}:${2}".format(hoursMinutesSeconds(sessionTimerTemp)))
+            lcdprint(sessionData[1] + "{}:{}".format(hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(hoursMinutesSeconds(sessionTimerTemp)))
             time.sleep(0.5) #Try not to kill LCD
         else:
             if GPIO.input(stopSWITCH):
