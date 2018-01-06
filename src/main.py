@@ -99,6 +99,7 @@ while True:
     if GPIO.input(keySWITCH): #System is powered down
         if currentMode != 0:
             print("Powering down")
+            time.sleep(0.1) #Big old debounce
             #System has literally just been powered down on this iteration of main loop
             GPIO.output(redLED, GPIO.LOW)
             GPIO.output(yellowLED, GPIO.LOW)
@@ -107,6 +108,8 @@ while True:
             currentMode = 0
     elif currentMode == 0: #Keyswitch is on but system technically powered down
         #System is getting powered on
+        print("Powering up")
+        time.sleep(0.05)  # Debounce
         GPIO.output(yellowLED, GPIO.HIGH) #this is the power indicator
         lcdprint("   TIMEKEEPER   ENTER PROJECT ID")
         currentMode = 1 #Entry menu
@@ -118,11 +121,13 @@ while True:
                     projectIDEntered += str(c)
                     print("Got " + str(c))
                     lcdprint("   TIMEKEEPER   " + projectIDEntered)
+                    time.sleep(0.05)  # Debounce
                 elif c == "\n":
                     break
             except IOError:
                 pass
             if GPIO.input(keySWITCH): #Power key has been turned to off
+                time.sleep(0.05)  # Debounce
                 print("Key switched back")
                 break
         if GPIO.input(keySWITCH) != True: #Check we didn't break because of power switch
@@ -137,17 +142,20 @@ while True:
             if GPIO.input(startBUTTON) != True:
                 #Someone want's to end the session
                 print("Ending session")
+                time.sleep(0.05)  # Debounce
                 endSession()
                 currentMode = 0
             elif GPIO.input(stopSWITCH) and sessionTimerRunning:
                 #So we're still running the timer but it needs to be paused
                 print("Pause")
+                time.sleep(0.05)  # Debounce
                 sessionTimer += time.time()-sessionLastStart #add the time to the thing
                 sessionTimerRunning = False
                 GPIO.output(redLED, GPIO.LOW)
             elif GPIO.input(stopSWITCH) != True and sessionTimerRunning != True:
                 #Need to restart the timer
                 print("Resume")
+                time.sleep(0.05)  # Debounce
                 sessionLastStart = time.time()
                 sessionTimerRunning = True
                 GPIO.output(redLED, GPIO.HIGH)
@@ -155,9 +163,15 @@ while True:
             if GPIO.input(stopSWITCH):
                 print("Release stop")
                 lcdprint("  RELEASE STOP  !!!!!!!!!!!!!!!!") #We can't start a session when the stop thing is pressed down
+                while GPIO.input(stopSWITCH):
+                    if GPIO.input(keySWITCH):
+                        time.sleep(0.05) #Debounce
+                        break
+                    #Basically sit in a huge loop until either stop is released or they power down
             elif GPIO.input(startBUTTON) != True:
                 #Start running session
                 print("Starting")
+                time.sleep(0.05)  # Debounce
                 sessionLastStart = time.time()
                 sessionTimerRunning = True
                 sessionRunning = True
