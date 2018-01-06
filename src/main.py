@@ -93,9 +93,18 @@ def endSession():
     return True
     #End a session if theres on running
 def getSessionData(projectID):
-    print(webRequest("projects/get/", "id=" + str(projectID)))
-    #Param 1: projectid, 2: 16 characters of title (exactly 16 - pad with spaces if less), 3 is the number of seconds the project currently has a its total
-    return [projectID, "TEST TEST TEST  ", 3452948576]
+    request = webRequest("projects/get/", "id=" + str(projectID))
+    if request["result"]:
+        # Param 1: projectid, 2: 16 characters of title (exactly 16 - pad with spaces if less), 3 is the number of seconds the project currently has a its total
+        if len(request["result"]["NAME"]) > 16:
+            request["result"]["NAME"] = request["result"]["NAME"][0:16]
+        elif len(request["result"]["NAME"]) < 16:
+            for x in range(0, 16-len(request["result"]["NAME"])):
+                request["result"]["NAME"] = str(request["result"]["NAME"]) + " " #Add spaces
+
+        return [request["result"]["ID"], request["result"]["NAME"], request["result"]["TOTALTIME"]]
+    else:
+        return False
 
 def is_int(input):
     try:
@@ -164,8 +173,9 @@ while True:
             print("Loading " + projectIDEntered)
             lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
             sessionData = getSessionData(projectIDEntered)
-            lcdprint(sessionData[1] + "{}:{}:{}".format(hoursMinutesSeconds(sessionData[2])) + "   READY")
-            currentMode = 2 #Session start/running page
+            if sessionData:
+                lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
+                currentMode = 2 #Session start/running page
     elif currentMode == 2:
         if sessionRunning:
             #There's a session runnig so we want to check for various stuff
@@ -194,7 +204,7 @@ while True:
                 sessionTimerTemp = sessionTimer + (time.time() - sessionLastStart)
             else:
                 sessionTimerTemp = sessionTimer
-            lcdprint(sessionData[1] + "{}:{}".format(hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(hoursMinutesSeconds(sessionTimerTemp)))
+            lcdprint(sessionData[1] + "{}:{}".format(*hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionTimerTemp)))
             time.sleep(0.5) #Try not to kill LCD
         else:
             if GPIO.input(stopSWITCH):
