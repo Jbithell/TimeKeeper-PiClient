@@ -171,10 +171,11 @@ while True:
             except IOError:
                 pass
             if GPIO.input(keySWITCH): #Power key has been turned to off
-                time.sleep(0.05)  # Debounce
+                time.sleep(0.2)  # Debounce
                 print("Key switched back")
+                projectIDEntered = ""
                 break
-        if GPIO.input(keySWITCH) != True: #Check we didn't break because of power switch
+        if GPIO.input(keySWITCH) != True and len(projectIDEntered) > 0: #Check we didn't break because of power switch
             print("Loading " + projectIDEntered)
             lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
             sessionData = getSessionData(projectIDEntered)
