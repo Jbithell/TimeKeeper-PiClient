@@ -83,7 +83,8 @@ def endSession():
     #End a session if theres on running
 def getSessionData(projectID):
     print(projectID)
-    return [projectID, "TEST TEST TEST"]
+    #Param 1: projectid, 2: 16 characters of title (exactly 16 - pad with spaces if less), 3 is the number of seconds the project currently has a its total
+    return [projectID, "TEST TEST TEST", 3452948576]
     #Get data on a session that's about to begin
 def is_int(input):
   try:
@@ -122,7 +123,7 @@ while True:
                     print("Got " + str(c))
                     lcdprint("   TIMEKEEPER   " + projectIDEntered)
                     time.sleep(0.05)  # Debounce
-                elif c == "\n":
+                elif c == "\n" and len(projectIDEntered) > 0: #Can't hit enter immidiatley
                     break
             except IOError:
                 pass
@@ -134,7 +135,7 @@ while True:
             print("Loading " + projectIDEntered)
             lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
             sessionData = getSessionData(projectIDEntered)
-            lcdprint(sessionData[1])
+            lcdprint(sessionData[1] + time.strftime("%H:%M:%S", time.gmtime(sessionData[2])) + "   READY")
             currentMode = 2 #Session start/running page
     elif currentMode == 2:
         if sessionRunning:
@@ -142,7 +143,7 @@ while True:
             if GPIO.input(startBUTTON) != True:
                 #Someone want's to end the session
                 print("Ending session")
-                time.sleep(0.05)  # Debounce
+                time.sleep(0.2)  # Debounce
                 endSession()
                 currentMode = 0
             elif GPIO.input(stopSWITCH) and sessionTimerRunning:
@@ -159,6 +160,13 @@ while True:
                 sessionLastStart = time.time()
                 sessionTimerRunning = True
                 GPIO.output(redLED, GPIO.HIGH)
+            #Print the status of the timer with a countup
+            if sessionTimerRunning:
+                sessionTimerTemp = sessionTimer + (time.time() - sessionLastStart)
+            else:
+                sessionTimerTemp = sessionTimer
+            lcdprint(sessionData[1] + time.strftime("%H:%M", time.gmtime(sessionData[2] + sessionTimerTemp)) + "   " + time.strftime("%H:%M:%S", time.gmtime(sessionTimerTemp)))
+            time.sleep(0.5) #Try not to kill LCD
         else:
             if GPIO.input(stopSWITCH):
                 print("Release stop")
@@ -171,7 +179,7 @@ while True:
             elif GPIO.input(startBUTTON) != True:
                 #Start running session
                 print("Starting")
-                time.sleep(0.05)  # Debounce
+                time.sleep(0.2)  # Debounce
                 sessionLastStart = time.time()
                 sessionTimerRunning = True
                 sessionRunning = True
