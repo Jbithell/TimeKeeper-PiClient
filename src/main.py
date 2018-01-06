@@ -120,7 +120,7 @@ def hoursMinutesSeconds(input):
     s = int(round(s))
     m = int(round(m))
     h = int(round(h))
-    
+
     if (h < 1):
         h = "00"
     if (m < 1):
@@ -181,6 +181,8 @@ while True:
             if sessionData:
                 lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
                 currentMode = 2 #Session start/running page
+            else:
+                currentMode = 0
     elif currentMode == 2:
         if sessionRunning:
             #There's a session runnig so we want to check for various stuff
