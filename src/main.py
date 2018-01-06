@@ -2,7 +2,7 @@ import termios, fcntl, sys, os
 import time
 import serial
 import RPi.GPIO as GPIO
-
+print(sys.version)
 #                   Start setting up LEDs and physical components
 GPIO.setmode(GPIO.BCM)
 yellowLED = 2
@@ -85,7 +85,7 @@ def getSessionData(projectID):
     print(projectID)
     #Param 1: projectid, 2: 16 characters of title (exactly 16 - pad with spaces if less), 3 is the number of seconds the project currently has a its total
     return [projectID, "TEST TEST TEST", 3452948576]
-    #Get data on a session that's about to begin
+
 def is_int(input):
   try:
     num = int(input)
