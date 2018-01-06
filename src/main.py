@@ -224,6 +224,7 @@ while True:
                         time.sleep(0.05) #Debounce
                         #Poweroff basically
                         break
+                time.sleep(2)  # Debounce
                 lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
                 #Basically sit in a huge loop until either stop is released or they power down
             elif GPIO.input(startBUTTON) != True:
