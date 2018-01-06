@@ -90,6 +90,7 @@ def getSessionData(projectID):
 #                   Start main loop
 currentMode = 0 #powered off
 while True:
+    print("MODE " + str(currentMode))
     if GPIO.input(keySWITCH): #System is powered down
         if currentMode != 0:
             #System has literally just been powered down on this iteration of main loop
@@ -98,7 +99,7 @@ while True:
             endSession() #Just in case you left one running when powering down
             lcdprint("   TIMEKEEPER                 v6")
             currentMode = 0
-    elif currentMode == 0:
+    elif currentMode == 0: #Keyswitch is on but system technically powered down
         #System is getting powered on
         GPIO.output(yellowLED, GPIO.HIGH) #this is the power indicator
         lcdprint("   TIMEKEEPER   ENTER PROJECT ID")
@@ -107,6 +108,7 @@ while True:
         while True:
             try:
                 c = sys.stdin.read(1)
+                print(str(c))
                 if isinstance(c, (int, long)):
                     projectIDEntered += str(c)
                     lcdprint("   TIMEKEEPER   " + projectIDEntered)
@@ -114,10 +116,13 @@ while True:
                     break
             except IOError:
                 pass
-        lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
-        sessionData = getSessionData(projectIDEntered)
-        lcdprint(sessionData[1])
-        currentMode = 2 #Session start/running page
+            if GPIO.input(keySWITCH): #Power key has been turned to off
+                break
+        if GPIO.input(keySWITCH) != True: #Check we didn't break because of power switch
+            lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
+            sessionData = getSessionData(projectIDEntered)
+            lcdprint(sessionData[1])
+            currentMode = 2 #Session start/running page
     elif currentMode == 2:
         if sessionRunning:
             #There's a session runnig so we want to check for various stuff
