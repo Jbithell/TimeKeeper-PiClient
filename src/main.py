@@ -94,8 +94,8 @@ def is_int(input):
     return True
 def hoursMinutesSeconds(input):
     #https://stackoverflow.com/questions/775049/python-time-seconds-to-hms
-    m, s = divmod(seconds, input)
-    h, m = divmod(m, input)
+    m, s = divmod(input, 60)
+    h, m = divmod(m, 60)
     if (h < 1):
         h = "00"
     if (m < 1):
