@@ -74,6 +74,7 @@ def webRequest(path, paramstring):
     else:
         paramstring = "?"
     url = "https://" + "jbithell.com/projects/timekeeper/api/v4/" + path + paramstring + "USERKEY=" + str(os.getenv('USERKEY', '')) + "&USERSECRET=" + str(os.getenv('USERSECRET', ''))
+    print(url)
     response = urllib.urlopen(url)
     data = json.loads(response.read())
     return data
