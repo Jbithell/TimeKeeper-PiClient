@@ -7,8 +7,8 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 yellowLED = 2
 redLED = 17
-keySWITCH = 3
-startBUTTON = 27
+keySWITCH = 3 #Reversed
+startBUTTON = 27 #Reversed
 stopSWITCH = 4
 
 GPIO.setup(yellowLED,GPIO.OUT)
@@ -59,21 +59,88 @@ def lcdprint(text):
     print("Data sent to LCD: " + str(text))
 lcdprint("   TIMEKEEPER      SYSTEM ONLINE")
 print ("LCD AWAKE")
-#                      End
+#                   End
 
-
-
-while 1:
-    if (GPIO.input(startBUTTON)):
-        GPIO.output(redLED, GPIO.HIGH)
-        GPIO.output(yellowLED, GPIO.HIGH)
-    else:
+#                   Start setting up data connection
+sessionRunning = False
+sessionTimer = 0
+sessionLastStart = 0 #Last time a session was started
+sessionTimerRunning = False
+sessionData = []
+def endSession():
+    global sessionRunning, sessionTimer, sessionLastStart, sessionTimerRunning
+    if sessionTimerRunning:
+        sessionTimer = time.time() - sessionLastStart
+        sessionTimerRunning = False
+        sessionLastStart = 0
         GPIO.output(redLED, GPIO.LOW)
-        GPIO.output(yellowLED, GPIO.LOW)
-    '''
-    try:
-        c = sys.stdin.read(1)
-        print "Got character", repr(c)
-    except IOError:
-        pass
-    '''
+    sessionRunning = False
+    #Session timer now acuratley represents the time for this session
+
+
+    sessionTimer = 0
+    return True
+    #End a session if theres on running
+def getSessionData(projectID):
+    print(projectID)
+    return [projectID, "TEST TEST TEST"]
+    #Get data on a session that's about to begin
+#                   End
+
+#                   Start main loop
+currentMode = 0 #powered off
+while True:
+    if GPIO.input(keySWITCH): #System is powered down
+        if currentMode != 0:
+            #System has literally just been powered down on this iteration of main loop
+            GPIO.output(redLED, GPIO.LOW)
+            GPIO.output(yellowLED, GPIO.LOW)
+            endSession() #Just in case you left one running when powering down
+            lcdprint("   TIMEKEEPER                 v6")
+            currentMode = 0
+    elif currentMode == 0:
+        #System is getting powered on
+        GPIO.output(yellowLED, GPIO.HIGH) #this is the power indicator
+        lcdprint("   TIMEKEEPER   ENTER PROJECT ID")
+        currentMode = 1 #Entry menu
+        projectIDEntered = ""
+        while True:
+            try:
+                c = sys.stdin.read(1)
+                if isinstance(c, (int, long)):
+                    projectIDEntered += str(c)
+                    lcdprint("   TIMEKEEPER   " + projectIDEntered)
+                elif c == "\n":
+                    break
+            except IOError:
+                pass
+        lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
+        sessionData = getSessionData(projectIDEntered)
+        lcdprint(sessionData[1])
+        currentMode = 2 #Session start/running page
+    elif currentMode == 2:
+        if sessionRunning:
+            #There's a session runnig so we want to check for various stuff
+            if GPIO.input(startBUTTON) != True:
+                #Someone want's to end the session
+                endSession()
+                currentMode = 0
+            elif GPIO.input(stopSWITCH) and sessionTimerRunning:
+                #So we're still running the timer but it needs to be paused
+                sessionTimer += time.time()-sessionLastStart #add the time to the thing
+                sessionTimerRunning = False
+                GPIO.output(redLED, GPIO.LOW)
+            elif GPIO.input(stopSWITCH) != True and sessionTimerRunning != True:
+                #Need to restart the timer
+                sessionLastStart = time.time()
+                sessionTimerRunning = True
+                GPIO.output(redLED, GPIO.HIGH)
+        else:
+            if GPIO.input(stopSWITCH):
+                lcdprint("  RELEASE STOP  !!!!!!!!!!!!!!!!") #We can't start a session when the stop thing is pressed down
+            elif GPIO.input(startBUTTON) != True:
+                #Start running session
+                sessionLastStart = time.time()
+                sessionTimerRunning = True
+                sessionRunning = True
+                GPIO.output(redLED, GPIO.HIGH)
