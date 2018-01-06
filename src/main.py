@@ -213,11 +213,13 @@ while True:
             time.sleep(0.5) #Try not to kill LCD
         else:
             if GPIO.input(stopSWITCH):
+                time.sleep(0.05) #Debounce
                 print("Release stop")
                 lcdprint("  RELEASE STOP  !!!!!!!!!!!!!!!!") #We can't start a session when the stop thing is pressed down
                 while GPIO.input(stopSWITCH):
                     if GPIO.input(keySWITCH):
                         time.sleep(0.05) #Debounce
+                        lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
                         break
                     #Basically sit in a huge loop until either stop is released or they power down
             elif GPIO.input(startBUTTON) != True:
