@@ -228,7 +228,7 @@ while True:
             elif GPIO.input(startBUTTON) != True:
                 #Start running session
                 print("Starting")
-                time.sleep(0.2)  # Debounce
+                time.sleep(2)  # Debounce - this one tends to be problematic
                 sessionLastStart = time.time()
                 sessionTimerRunning = True
                 sessionRunning = True
