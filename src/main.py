@@ -57,7 +57,7 @@ print("Arduino Started Up")
 def lcdprint(text):
     global port
     port.write(str(text) + "$")
-    print("Data sent to LCD: " + str(text))
+    #print("Data sent to LCD: " + str(text))
 lcdprint("   TIMEKEEPER      SYSTEM ONLINE")
 print ("LCD AWAKE")
 #                   End
