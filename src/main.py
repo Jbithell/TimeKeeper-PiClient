@@ -64,7 +64,7 @@ print ("LCD AWAKE")
 
 
 while 1:
-    if (GPIO.input(keySWITCH)):
+    if (GPIO.input(startBUTTON)):
         GPIO.output(redLED, GPIO.HIGH)
         GPIO.output(yellowLED, GPIO.HIGH)
     else:
