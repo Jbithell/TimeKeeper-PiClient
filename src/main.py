@@ -85,16 +85,20 @@ def getSessionData(projectID):
     print(projectID)
     return [projectID, "TEST TEST TEST"]
     #Get data on a session that's about to begin
+def is_int(input):
+  try:
+    num = int(input)
+  except ValueError:
+    return False
+  return True
 #                   End
 
 #                   Start main loop
 currentMode = 0 #powered off
 while True:
-    print(GPIO.input(keySWITCH),GPIO.input(startBUTTON),GPIO.input(stopSWITCH))
-while True:
-    print("MODE " + str(currentMode))
     if GPIO.input(keySWITCH): #System is powered down
         if currentMode != 0:
+            print("Powering down")
             #System has literally just been powered down on this iteration of main loop
             GPIO.output(redLED, GPIO.LOW)
             GPIO.output(yellowLED, GPIO.LOW)
@@ -110,17 +114,19 @@ while True:
         while True:
             try:
                 c = sys.stdin.read(1)
-                print(str(c))
-                if isinstance(c, (int, long)):
+                if is_int(c):
                     projectIDEntered += str(c)
+                    print("Got " + str(c))
                     lcdprint("   TIMEKEEPER   " + projectIDEntered)
                 elif c == "\n":
                     break
             except IOError:
                 pass
             if GPIO.input(keySWITCH): #Power key has been turned to off
+                print("Key switched back")
                 break
         if GPIO.input(keySWITCH) != True: #Check we didn't break because of power switch
+            print("Loading " + projectIDEntered)
             lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
             sessionData = getSessionData(projectIDEntered)
             lcdprint(sessionData[1])
@@ -130,23 +136,28 @@ while True:
             #There's a session runnig so we want to check for various stuff
             if GPIO.input(startBUTTON) != True:
                 #Someone want's to end the session
+                print("Ending session")
                 endSession()
                 currentMode = 0
             elif GPIO.input(stopSWITCH) and sessionTimerRunning:
                 #So we're still running the timer but it needs to be paused
+                print("Pause")
                 sessionTimer += time.time()-sessionLastStart #add the time to the thing
                 sessionTimerRunning = False
                 GPIO.output(redLED, GPIO.LOW)
             elif GPIO.input(stopSWITCH) != True and sessionTimerRunning != True:
                 #Need to restart the timer
+                print("Resume")
                 sessionLastStart = time.time()
                 sessionTimerRunning = True
                 GPIO.output(redLED, GPIO.HIGH)
         else:
             if GPIO.input(stopSWITCH):
+                print("Release stop")
                 lcdprint("  RELEASE STOP  !!!!!!!!!!!!!!!!") #We can't start a session when the stop thing is pressed down
             elif GPIO.input(startBUTTON) != True:
                 #Start running session
+                print("Starting")
                 sessionLastStart = time.time()
                 sessionTimerRunning = True
                 sessionRunning = True
