@@ -2,6 +2,7 @@ import termios, fcntl, sys, os
 import time
 import serial
 import RPi.GPIO as GPIO
+import urllib, json
 print(sys.version)
 #                   Start setting up LEDs and physical components
 GPIO.setmode(GPIO.BCM)
@@ -67,6 +68,15 @@ sessionTimer = 0
 sessionLastStart = 0 #Last time a session was started
 sessionTimerRunning = False
 sessionData = []
+def webRequest(path, paramstring):
+    if (len(paramstring) > 0):
+        paramstring = "?" + paramstring + "&"
+    else:
+        paramstring = "?"
+    url = "https://" + "jbithell.com/projects/timekeeper/api/v4/" + path + paramstring + "USERKEY=" + str(os.getenv('USERKEY', '')) + "&USERSECRET=" + str(os.getenv('USERSECRET', ''))
+    response = urllib.urlopen(url)
+    data = json.loads(response.read())
+    return data
 def endSession():
     global sessionRunning, sessionTimer, sessionLastStart, sessionTimerRunning
     if sessionTimerRunning:
@@ -82,9 +92,9 @@ def endSession():
     return True
     #End a session if theres on running
 def getSessionData(projectID):
-    print(projectID)
+    print(webRequest("projects/get/", "id=" + str(projectID)))
     #Param 1: projectid, 2: 16 characters of title (exactly 16 - pad with spaces if less), 3 is the number of seconds the project currently has a its total
-    return [projectID, "TEST TEST TEST", 3452948576]
+    return [projectID, "TEST TEST TEST  ", 3452948576]
 
 def is_int(input):
     try:
