@@ -120,6 +120,7 @@ def hoursMinutesSeconds(input):
         m = "0" + str(m) #Pad
     if (s < 10):
         s = "0" + str(s)  # Pad
+    print(h,m,s)
     return h,m,s
 #                   End
 
