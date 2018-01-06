@@ -57,14 +57,14 @@ def lcdprint(text):
     global port
     port.write(str(text) + "$")
     print("Data sent to LCD: " + str(text))
-lcdprint("   TIMEKEEPER       SYSTEM ONLINE")
+lcdprint("   TIMEKEEPER      SYSTEM ONLINE")
 print ("LCD AWAKE")
 #                      End
 
 
 
 while 1:
-    if (GPIO.input(stopSWITCH)):
+    if (GPIO.input(keySWITCH)):
         GPIO.output(redLED, GPIO.HIGH)
         GPIO.output(yellowLED, GPIO.HIGH)
     else:
