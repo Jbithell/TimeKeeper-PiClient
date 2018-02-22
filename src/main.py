@@ -242,9 +242,6 @@ while True:
     elif currentMode == 2:
         if sessionRunning:
             # There's a session running so we want to check for various stuff
-            lcdprint(sessionData[1] + "{}:{}".format(
-                *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
-                *hoursMinutesSeconds(sessionTimerTemp))) #Keep screen updated
 
             if GPIO.input(startBUTTON) != True:
                 # Someone wants to end the session
@@ -277,6 +274,11 @@ while True:
                 #Timer is paused
                 sessionTimerTemp = sessionTimer
                 time.sleep(0.5)  # Try not to kill LCD by constantly sending it updates
+
+            if sessionRunning: #Session could have been stopped by the time you get down here
+                lcdprint(sessionData[1] + "{}:{}".format(
+                    *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
+                    *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
 
 
         else:
