@@ -110,8 +110,11 @@ def endSession():
 
     return True
     #End a session if theres on running
-def getSessionData(projectID):
-    request = webRequest("projects/get/", "id=" + str(projectID))
+def getSessionData(projectID, cardReadID):
+    if cardReadID == False:
+        request = webRequest("projects/get/", "id=" + str(projectID))
+    elif projectID == False:
+        request = webRequest("projects/get/", "RFIDid=" + str(cardReadID))
     if request["result"]:
         # Param 1: projectid, 2: 16 characters of title (exactly 16 - pad with spaces if less), 3 is the number of seconds the project currently has a its total
         if len(request["result"]["NAME"]) > 16:
@@ -176,7 +179,9 @@ while True:
         lcdprint("   TIMEKEEPER   ENTER PROJECT ID")
         currentMode = 1 #Entry menu
         projectIDEntered = ""
+        cardReadID = ""
         while True:
+            #      Keypad
             try:
                 c = sys.stdin.read(1)
                 if is_int(c):
@@ -188,15 +193,32 @@ while True:
                     break
             except IOError:
                 pass
+            #       EndKeypad
+
+            #       RFID
+            (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
+            (status, uid) = MIFAREReader.MFRC522_Anticoll()
+            if status == MIFAREReader.MI_OK:
+                cardReadID = (str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3]))
+                print(cardReadID)
+            #       EndRFID
+
             if GPIO.input(keySWITCH): #Power key has been turned to off
                 time.sleep(0.2)  # Debounce
                 print("Key switched back")
                 projectIDEntered = ""
+                cardReadID = ""
                 break
-        if GPIO.input(keySWITCH) != True and len(projectIDEntered) > 0: #Check we didn't break because of power switch
-            print("Loading " + projectIDEntered)
-            lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
-            sessionData = getSessionData(projectIDEntered)
+        if GPIO.input(keySWITCH) != True and (len(projectIDEntered) > 0 or len(cardReadID) > 0): #Check we didn't break because of power switch
+            if len(cardReadID) > 0:
+                #They've swiped an RFID thing not actually used a project ID so we can ignore the project ID and make a slightly different request
+                print("Loading RFID " + cardReadID)
+                lcdprint("TIMEKEEPER LOAD+" + "   RFID SWIPE   ")
+                sessionData = getSessionData(False, cardReadID)
+            else:
+                print("Loading " + projectIDEntered)
+                lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
+                sessionData = getSessionData(projectIDEntered, False)
             if sessionData:
                 lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
                 currentMode = 2 #Session start/running page
