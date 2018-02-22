@@ -170,7 +170,8 @@ while True:
             #System has literally just been powered down on this iteration of main loop
             GPIO.output(redLED, GPIO.LOW)
             GPIO.output(yellowLED, GPIO.LOW)
-            endSession() #Just in case you left one running when powering down
+            if sessionRunning:
+                endSession() #Just in case you left one running when powering down
             lcdprint("   TIMEKEEPER                 v6")
             currentMode = 0
     elif currentMode == 0: #Keyswitch is on but system technically powered down
