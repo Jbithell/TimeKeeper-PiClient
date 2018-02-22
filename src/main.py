@@ -204,6 +204,7 @@ while True:
             if status == MIFAREReader.MI_OK:
                 cardReadID = (str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3]))
                 print(cardReadID)
+                break
             #       EndRFID
 
             if GPIO.input(keySWITCH): #Power key has been turned to off
@@ -261,7 +262,7 @@ while True:
                 #Timer is paused
                 sessionTimerTemp = sessionTimer
                 time.sleep(0.5)  # Try not to kill LCD by constantly sending it updates
-                
+
             lcdprint(sessionData[1] + "{}:{}".format(*hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionTimerTemp)))
 
 
