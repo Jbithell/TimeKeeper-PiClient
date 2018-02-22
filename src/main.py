@@ -107,7 +107,7 @@ def endSession():
         GPIO.output(redLED, GPIO.LOW)
     sessionRunning = False
     # Session timer now accurately represents the time for this session
-    request = webRequest("sessions/start/", "projectid=" + str(sessionData[0]) + "&trigger=" + "RPiTimeKeeper6" + "&start=" + str(sessionStartTime) + "&duration=" + str(sessionTimer))
+    request = webRequest("sessions/start/", "projectid=" + str(sessionData[0]) + "&trigger=" + "RPiTimeKeeper6" + "&start=" + str(sessionStartTime) + "&duration=" + str(sessionTimer) + "&end=" + str(time.time()))
     sessionTimer = 0
     sessionData = False
     sessionRunning = False
