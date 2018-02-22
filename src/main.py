@@ -314,7 +314,7 @@ while True:
             #      Keypad to detect back button
             try:
                 c = sys.stdin.read(1)
-                print(c)
+                print(repr(c))
 
             except IOError:
                 pass
