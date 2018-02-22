@@ -37,10 +37,10 @@ oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
 fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 #                   End
 #                   Start setting up RFID logger
-signal.signal(signal.SIGINT, end_read)
+signal.signal(signal.SIGINT)
 MIFAREReader = MFRC522.MFRC522()
 #                   End
-#                   Start setting up LCD
+#                   Start setting` up LCD
 print("Waking LCD")
 port = serial.Serial(
     "/dev/ttyUSB0",
