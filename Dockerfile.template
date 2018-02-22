@@ -1,40 +1,35 @@
-FROM resin/%%RESIN_MACHINE_NAME%%-debian
+# base-image for python on any machine using a template variable,
+# see more about dockerfile templates here:http://docs.resin.io/pages/deployment/docker-templates
+FROM resin/%%RESIN_MACHINE_NAME%%-python
 
 # use apt-get if you need to install dependencies,
- RUN apt-get update && apt-get install -yq \
-    pkg-config \
-    build-essential \
-    curl \
-    manpages-dev \
-    python3 \
-    python3-dev \
-    python3-pip \
-    python3-tk \
-    python3-setuptools \
-    libfreetype6-dev \
-    rpl \
-    git
+# for instance if you need ALSA sound utils, just uncomment the lines below.
+# RUN apt-get update && apt-get install -yq \
+#    alsa-utils libasound2-dev && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
-# Install Pip 
-RUN sudo easy_install3 pip
-COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+# Force tty1 to attach
+COPY tty-input.conf /etc/systemd/system/launch.service.d/tty-input.conf
 
 # Set our working directory
 WORKDIR /usr/src/app
 
-# switch on systemd init system in container
-ENV INITSYSTEM on
+# Copy requirements.txt first for better cache on later pushes
+COPY ./requirements.txt /requirements.txt
 
-#SPI Install
-RUN git clone https://github.com/lthiery/SPI-Py.git
-RUN cd SPI-Py/ && python3 setup.py install && cd ../
+# pip install python deps from requirements.txt on the resin.io build server
+RUN pip install -r /requirements.txt
+
+RUN git clone https://github.com/lthiery/SPI-Py
+RUN cd SPI-Py && python setup.py install && cd ..
+
 
 # This will copy all files in our root to the working  directory in the container
 COPY . ./
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# switch on systemd init system in container
+ENV INITSYSTEM on
 
 # main.py will run when container starts up on the device
-CMD ["/usr/bin/python3","/usr/src/app/srcTest/Read.py"]
+#CMD python src/main.py > /dev/console 2> /dev/console
+CMD python src/Read.py > /dev/console 2> /dev/console
