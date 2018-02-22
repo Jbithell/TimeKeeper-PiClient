@@ -99,7 +99,7 @@ def webRequest(path, paramstring):
 
 
 def endSession():
-    global sessionRunning, sessionTimer, sessionLastStart, sessionTimerRunning, sessionData
+    global sessionRunning, sessionTimer, sessionLastStart, sessionTimerRunning, sessionData, sessionInitiatorTag
     if sessionTimerRunning:
         sessionTimer = time.time() - sessionLastStart
         sessionTimerRunning = False
@@ -107,7 +107,7 @@ def endSession():
         GPIO.output(redLED, GPIO.LOW)
     sessionRunning = False
     # Session timer now accurately represents the time for this session
-    request = webRequest("sessions/start/", "projectid=" + str(sessionData[0]) + "&trigger=" + "Jbithell/TimeKeeper-PiClient" + "&start=" + str(sessionStartTime) + "&duration=" + str(sessionTimer) + "&end=" + str(time.time()))
+    request = webRequest("sessions/start/", "projectid=" + str(sessionData[0]) + "&trigger=" + "Jbithell/TimeKeeper-PiClient" + "|" + "TAG:" + sessionInitiatorTag + "&start=" + str(sessionStartTime) + "&duration=" + str(sessionTimer) + "&end=" + str(time.time()))
     sessionTimer = 0
     sessionData = False
     sessionRunning = False
@@ -118,6 +118,7 @@ def endSession():
 
 
 def getSessionData(projectID, cardReadID):
+    global sessionInitiatorTag
     if cardReadID == False:
         request = webRequest("projects/get/", "id=" + str(projectID))
     elif projectID == False:
@@ -130,6 +131,10 @@ def getSessionData(projectID, cardReadID):
             for x in range(0, 16 - len(request["result"]["NAME"])):
                 request["result"]["NAME"] = str(request["result"]["NAME"]) + " "  # Add spaces
 
+        if request["result"]["RFIDTAG"] != "":
+            sessionInitiatorTag = request["result"]["RFIDTAG"]
+        else:
+            sessionInitiatorTag = False
         return [request["result"]["ID"], request["result"]["NAME"], request["result"]["TOTALTIME"]]
     else:
         return False
