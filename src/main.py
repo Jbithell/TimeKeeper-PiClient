@@ -37,7 +37,9 @@ oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
 fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 #                   End
 #                   Start setting up RFID logger
-signal.signal(signal.SIGINT, def(): return True)
+def signalEndReadFunction(signal,frame):
+    GPIO.cleanup()
+signal.signal(signal.SIGINT, signalEndReadFunction)
 MIFAREReader = MFRC522.MFRC522()
 #                   End
 #                   Start setting` up LCD
