@@ -253,13 +253,17 @@ while True:
             #Print the status of the timer with a countup
             if sessionTimerRunning:
                 sessionTimerTemp = sessionTimer + (time.time() - sessionLastStart)
+                GPIO.output(redLED, GPIO.HIGH)
+                time.sleep(0.3)  # Try not to kill LCD by constantly sending it updates
+                GPIO.output(redLED, GPIO.LOW)
+                time.sleep(0.3)  # Try not to kill LCD by constantly sending it updates
             else:
+                #Timer is paused
                 sessionTimerTemp = sessionTimer
+                time.sleep(0.5)  # Try not to kill LCD by constantly sending it updates
+                
             lcdprint(sessionData[1] + "{}:{}".format(*hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionTimerTemp)))
-            GPIO.output(redLED, GPIO.HIGH)
-            time.sleep(0.3) #Try not to kill LCD by constantly sending it updates
-            GPIO.output(redLED, GPIO.LOW)
-            time.sleep(0.3)  # Try not to kill LCD by constantly sending it updates
+
 
         else:
             if GPIO.input(stopSWITCH):
