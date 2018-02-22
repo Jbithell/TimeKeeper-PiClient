@@ -209,6 +209,8 @@ while True:
                     time.sleep(0.01)  # Debounce
                 elif c == "\n" and len(projectIDEntered) > 0:  # Can't hit enter immediately
                     break
+                elif c == "\x7f" and len(projectIDEntered) > 0: #Backspace
+                    projectIDEntered = str(projectIDEntered[:-1])
             except IOError:
                 pass
             # EndKeypad
@@ -314,8 +316,8 @@ while True:
             #      Keypad to detect back button
             try:
                 c = sys.stdin.read(1)
-                print(repr(c))
-
+                if c == "\x7f":
+                    currentMode = 0 #Restart basically - if they hit the back key
             except IOError:
                 pass
             # EndKeypad
