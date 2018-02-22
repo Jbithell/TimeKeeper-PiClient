@@ -80,6 +80,7 @@ print("LCD AWAKE")
 sessionRunning = False
 sessionTimer = 0
 sessionLastStart = 0  # Last time a session was started
+sessionStartTime = 0 # When the timer started initially
 sessionTimerRunning = False
 sessionData = []
 
@@ -106,7 +107,7 @@ def endSession():
         GPIO.output(redLED, GPIO.LOW)
     sessionRunning = False
     # Session timer now accurately represents the time for this session
-    request = webRequest("projects/get/", "id=" + str(sessionData[0]) + "&time=" + str(sessionTimer))
+    request = webRequest("projects/start/", "projectid=" + str(sessionData[0]) + "&trigger=" + "RPiTimeKeeper6" + "&start=" + str(sessionStartTime) + "&duration=" + str(sessionTimer))
     sessionTimer = 0
     sessionData = False
     sessionRunning = False
@@ -300,6 +301,7 @@ while True:
                 print("Starting")
                 time.sleep(2)  # Debounce - this one tends to be problematic
                 sessionLastStart = time.time()
+                sessionStartTime = time.time()
                 sessionTimerRunning = True
                 sessionRunning = True
                 GPIO.output(redLED, GPIO.HIGH)
