@@ -3,6 +3,9 @@ import time
 import serial
 import RPi.GPIO as GPIO
 import urllib, json
+import MFRC522
+import signal
+
 print(sys.version)
 #                   Start setting up LEDs and physical components
 GPIO.setmode(GPIO.BCM)
@@ -33,7 +36,10 @@ termios.tcsetattr(fd, termios.TCSANOW, newattr)
 oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
 fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 #                   End
-
+#                   Start setting up RFID logger
+signal.signal(signal.SIGINT, end_read)
+MIFAREReader = MFRC522.MFRC522()
+#                   End
 #                   Start setting up LCD
 print("Waking LCD")
 port = serial.Serial(
@@ -87,9 +93,21 @@ def endSession():
         GPIO.output(redLED, GPIO.LOW)
     sessionRunning = False
     #Session timer now acuratley represents the time for this session
-
-
+    request = webRequest("projects/get/", "id=" + str(projectID) + "&time=" + str(sessionTimer))
     sessionTimer = 0
+    if request["result"]:
+        # Param 1: projectid, 2: 16 characters of title (exactly 16 - pad with spaces if less), 3 is the number of seconds the project currently has a its total
+        if len(request["result"]["NAME"]) > 16:
+            request["result"]["NAME"] = request["result"]["NAME"][0:16]
+        elif len(request["result"]["NAME"]) < 16:
+            for x in range(0, 16 - len(request["result"]["NAME"])):
+                request["result"]["NAME"] = str(request["result"]["NAME"]) + " "  # Add spaces
+
+        return [request["result"]["ID"], request["result"]["NAME"], request["result"]["TOTALTIME"]]
+    else:
+        return False
+
+
     return True
     #End a session if theres on running
 def getSessionData(projectID):
@@ -141,7 +159,7 @@ def hoursMinutesSeconds(input):
 currentMode = 0 #powered off
 while True:
     if GPIO.input(keySWITCH): #System is powered down
-        if currentMode != 0:
+        if currentMode != 0: #If it's doing anything else power it down
             print("Powering down")
             time.sleep(0.1) #Big old debounce
             #System has literally just been powered down on this iteration of main loop
@@ -165,7 +183,7 @@ while True:
                     projectIDEntered += str(c)
                     print("Got " + str(c))
                     lcdprint("   TIMEKEEPER   " + projectIDEntered)
-                    time.sleep(0.05)  # Debounce
+                    time.sleep(0.01)  # Debounce
                 elif c == "\n" and len(projectIDEntered) > 0: #Can't hit enter immidiatley
                     break
             except IOError:
@@ -188,7 +206,7 @@ while True:
         if sessionRunning:
             #There's a session runnig so we want to check for various stuff
             if GPIO.input(startBUTTON) != True:
-                #Someone want's to end the session
+                #Someone wants to end the session
                 print("Ending session")
                 time.sleep(0.2)  # Debounce
                 endSession()
@@ -213,20 +231,25 @@ while True:
             else:
                 sessionTimerTemp = sessionTimer
             lcdprint(sessionData[1] + "{}:{}".format(*hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionTimerTemp)))
-            time.sleep(0.5) #Try not to kill LCD
+            GPIO.output(redLED, GPIO.HIGH)
+            time.sleep(0.3) #Try not to kill LCD by constantly sending it updates
+            GPIO.output(redLED, GPIO.LOW)
+            time.sleep(0.3)  # Try not to kill LCD by constantly sending it updates
+
         else:
             if GPIO.input(stopSWITCH):
-                time.sleep(0.5) #Debounce
+                time.sleep(0.2) #Debounce
                 print("Release stop")
                 lcdprint("  RELEASE STOP  !!!!!!!!!!!!!!!!") #We can't start a session when the stop thing is pressed down
                 while GPIO.input(stopSWITCH):
+                    #Basically sit in a huge loop until either stop is released or they power down
                     if GPIO.input(keySWITCH):
                         time.sleep(0.05) #Debounce
                         #Poweroff basically
                         break
-                time.sleep(2)  # Debounce
-                lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
-                #Basically sit in a huge loop until either stop is released or they power down
+                if GPIO.input(keySWITCH) != True:
+                    time.sleep(0.5)  # Debounce
+                    lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
             elif GPIO.input(startBUTTON) != True:
                 #Start running session
                 print("Starting")
