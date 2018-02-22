@@ -310,3 +310,12 @@ while True:
                 sessionTimerRunning = True
                 sessionRunning = True
                 GPIO.output(redLED, GPIO.HIGH)
+
+            #      Keypad to detect back button
+            try:
+                c = sys.stdin.read(1)
+                print(c)
+
+            except IOError:
+                pass
+            # EndKeypad
