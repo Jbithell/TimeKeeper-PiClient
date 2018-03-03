@@ -1,6 +1,7 @@
 from HTU21D import HTU21D
 
 while True:
+    #test
     print(HTU21D(1).read_temperature())
 
 
