@@ -1,4 +1,4 @@
+pigpio
 Flask==0.10.1
 RPi.GPIO
 pyserial
-pigpio
