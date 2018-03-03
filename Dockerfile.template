@@ -23,6 +23,7 @@ RUN pip install -r /requirements.txt
 RUN git clone https://github.com/lthiery/SPI-Py
 RUN cd SPI-Py && python setup.py install && cd ..
 
+RUN python HTU21DF.py install
 
 # This will copy all files in our root to the working  directory in the container
 COPY . ./
