@@ -1,10 +1,3 @@
-from HTU21D import HTU21D
-
-while True:
-    #test
-    print(HTU21D(0).read_temperature())
-
-
 import termios, fcntl, sys, os
 import time
 import serial
