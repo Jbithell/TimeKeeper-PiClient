@@ -29,7 +29,5 @@ COPY . ./
 # switch on systemd init system in container
 ENV INITSYSTEM on
 
-RUN python HTU21DF.py install
-
 # main.py will run when container starts up on the device
 CMD python src/main.py > /dev/console 2> /dev/console
