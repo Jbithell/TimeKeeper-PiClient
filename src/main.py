@@ -112,6 +112,8 @@ def endSession():
     sessionData = False
     sessionRunning = False
     if request["result"]:
+        lcdprint("    SAVED TO    TIMEKEEPER CLOUD")
+        time.sleep(3)
         return True
     else:
         return False
