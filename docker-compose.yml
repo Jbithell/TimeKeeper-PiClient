@@ -1,4 +1,3 @@
-INITSYSTEM=on
 version: '2'
 services:
   timeKeeper:
