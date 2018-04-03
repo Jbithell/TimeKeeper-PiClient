@@ -6,3 +6,4 @@ services:
     restart: always
   monitoring:
     build: ./OtherTest
+    restart: always
