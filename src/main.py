@@ -263,8 +263,9 @@ while True:
                 # So we're still running the timer but it needs to be paused
                 print("Pause")
                 time.sleep(0.05)  # Debounce
-                sessionTimer += time.time() - sessionLastStart  # add the time to the thing
+                sessionTimer += float(time.time() - sessionLastStart)  # add the time to the thing
                 sessionTimerRunning = False
+                sessionTimerTemp = sessionTimer
                 GPIO.output(redLED, GPIO.LOW)
             elif GPIO.input(stopSWITCH) != True and sessionTimerRunning != True:
                 # Need to restart the timer
@@ -282,7 +283,6 @@ while True:
                 time.sleep(0.3)  # Try not to kill LCD by constantly sending it updates
             else:
                 #Timer is paused
-                sessionTimerTemp = sessionTimer
                 time.sleep(0.5)  # Try not to kill LCD by constantly sending it updates
 
             if sessionRunning: #Session could have been stopped by the time you get down here
@@ -311,6 +311,7 @@ while True:
                 time.sleep(2)  # Debounce - this one tends to be problematic
                 sessionLastStart = time.time()
                 sessionStartTime = time.time()
+                sessionTimer = 0
                 sessionTimerRunning = True
                 sessionRunning = True
                 GPIO.output(redLED, GPIO.HIGH)
