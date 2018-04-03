@@ -263,7 +263,10 @@ while True:
                 # So we're still running the timer but it needs to be paused
                 print("Pause")
                 time.sleep(0.05)  # Debounce
+                print(sessionTimer)
                 sessionTimer += float(time.time() - sessionLastStart)  # add the time to the thing
+                print(sessionTimer)
+                print(float(time.time() - sessionLastStart))
                 sessionTimerRunning = False
                 sessionTimerTemp = sessionTimer
                 GPIO.output(redLED, GPIO.LOW)
