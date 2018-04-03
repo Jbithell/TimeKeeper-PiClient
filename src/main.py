@@ -101,7 +101,7 @@ def webRequest(path, paramstring):
 def endSession():
     global sessionRunning, sessionTimer, sessionLastStart, sessionTimerRunning, sessionData, sessionInitiatorTag
     if sessionTimerRunning:
-        sessionTimer = time.time() - sessionLastStart
+        sessionTimer += time.time() - sessionLastStart
         sessionTimerRunning = False
         sessionLastStart = 0
         GPIO.output(redLED, GPIO.LOW)
@@ -263,10 +263,7 @@ while True:
                 # So we're still running the timer but it needs to be paused
                 print("Pause")
                 time.sleep(0.05)  # Debounce
-                print(sessionTimer)
-                sessionTimer += float(time.time() - sessionLastStart)  # add the time to the thing
-                print(sessionTimer)
-                print(float(time.time() - sessionLastStart))
+                sessionTimer += time.time() - sessionLastStart  # add the time to the thing
                 sessionTimerRunning = False
                 sessionTimerTemp = sessionTimer
                 GPIO.output(redLED, GPIO.LOW)
