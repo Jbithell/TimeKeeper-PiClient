@@ -1,0 +1,9 @@
+INITSYSTEM=on
+version: '2'
+services:
+  timeKeeper:
+    build: ./TimeKeeper6
+    privileged: true
+    restart: always
+  monitoring:
+    build: ./OtherTest
