@@ -1,0 +1,5 @@
+FROM resin/%%RESIN_MACHINE_NAME%%-python
+
+COPY src/ /usr/src/app
+
+CMD ["python", "/usr/src/app/main.py"]
