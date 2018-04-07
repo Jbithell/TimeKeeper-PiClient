@@ -1,9 +1,0 @@
-version: '2.1'
-services:
-  timeKeeper:
-    build: ./TimeKeeper6
-    privileged: true
-    restart: always
-  monitoring:
-    build: ./OtherTest
-    restart: always
