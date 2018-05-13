@@ -294,7 +294,7 @@ while True:
                         *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
                         *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
                 else:
-                    lcdprint(sessionData[1] + "·" + "{}:{}".format(
+                    lcdprint(sessionData[1] + "#" + "{}:{}".format(
                         *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
                         *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
                     time.sleep(0.2)
