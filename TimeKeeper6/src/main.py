@@ -245,7 +245,7 @@ while True:
                 lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
                 sessionData = getSessionData(projectIDEntered, False)
             if sessionData:
-                lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
+                lcdprint(sessionData[1] + " " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
                 currentMode = 2  # Session start/running page
             else:
                 currentMode = 0
@@ -294,11 +294,11 @@ while True:
                         *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
                         *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
                 else:
-                    lcdprint(sessionData[1] + "#" + "{}:{}".format(
+                    lcdprint(sessionData[1] + " " + "{}:{}".format(
                         *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
                         *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
                     time.sleep(0.2)
-                    lcdprint(sessionData[1] + " " + "{}:{}".format(
+                    lcdprint(sessionData[1] + "#" + "{}:{}".format(
                         *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
                         *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
                     time.sleep(0.2)
@@ -317,7 +317,7 @@ while True:
                         break
                 if GPIO.input(keySWITCH) != True:
                     time.sleep(0.5)  # Debounce
-                    lcdprint(sessionData[1] + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
+                    lcdprint(sessionData[1] + " " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
             elif GPIO.input(startBUTTON) != True:
                 #Start running session
                 print("Starting")
