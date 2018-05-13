@@ -126,11 +126,11 @@ def getSessionData(projectID, cardReadID):
     elif projectID == False:
         request = webRequest("projects/get/", "RFIDid=" + str(cardReadID))
     if request["result"]:
-        # Param 1: projectid, 2: 16 characters of title (exactly 16 - pad with spaces if less), 3 is the number of seconds the project currently has a its total
-        if len(request["result"]["NAME"]) > 16:
-            request["result"]["NAME"] = request["result"]["NAME"][0:16]
-        elif len(request["result"]["NAME"]) < 16:
-            for x in range(0, 16 - len(request["result"]["NAME"])):
+        # Param 1: projectid, 2: 15 characters of title (exactly 15 - pad with spaces if less), 3 is the number of seconds the project currently has a its total - the 16th character is used to indicate if a timer is actually running
+        if len(request["result"]["NAME"]) > 15:
+            request["result"]["NAME"] = request["result"]["NAME"][0:15]
+        elif len(request["result"]["NAME"]) < 15:
+            for x in range(0, 15 - len(request["result"]["NAME"])):
                 request["result"]["NAME"] = str(request["result"]["NAME"]) + " "  # Add spaces
 
         if request["result"]["RFIDTAG"] != "":
@@ -274,21 +274,34 @@ while True:
                 sessionLastStart = time.time()
                 sessionTimerRunning = True
                 GPIO.output(redLED, GPIO.HIGH)
+
             # Print the status of the timer with a countup
             if sessionTimerRunning:
                 sessionTimerTemp = sessionTimer + (time.time() - sessionLastStart)
                 GPIO.output(redLED, GPIO.HIGH)
                 time.sleep(0.3)  # Try not to kill LCD by constantly sending it updates
-                GPIO.output(redLED, GPIO.LOW)
-                time.sleep(0.3)  # Try not to kill LCD by constantly sending it updates
             else:
                 #Timer is paused
-                time.sleep(0.5)  # Try not to kill LCD by constantly sending it updates
+                GPIO.output(redLED, GPIO.LOW)
+                time.sleep(0.2)  # Try not to kill LCD by constantly sending it updates
+                GPIO.output(redLED, GPIO.HIGH)
+                time.sleep(0.2)  # Try not to kill LCD by constantly sending it updates
+
 
             if sessionRunning: #Session could have been stopped by the time you get down here
-                lcdprint(sessionData[1] + "{}:{}".format(
-                    *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
-                    *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
+                if sessionTimerRunning:
+                    lcdprint(sessionData[1] + " " + "{}:{}".format(
+                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
+                        *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
+                else:
+                    lcdprint(sessionData[1] + "·" + "{}:{}".format(
+                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
+                        *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
+                    time.sleep(0.2)
+                    lcdprint(sessionData[1] + " " + "{}:{}".format(
+                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
+                        *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
+                    time.sleep(0.2)
 
 
         else:
