@@ -256,6 +256,7 @@ while True:
             if GPIO.input(startBUTTON) != True:
                 # Someone wants to end the session
                 print("Ending session")
+                GPIO.output(redLED, GPIO.LOW)
                 time.sleep(0.2)  # Debounce
                 endSession()
                 currentMode = 0
