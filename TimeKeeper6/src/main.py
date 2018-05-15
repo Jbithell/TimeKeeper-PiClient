@@ -112,10 +112,13 @@ def endSession():
     sessionData = False
     sessionRunning = False
     if request["result"]:
+        GPIO.output(redLED, GPIO.LOW)
         lcdprint("    SAVED TO    TIMEKEEPER CLOUD")
         time.sleep(3)
         return True
     else:
+        lcdprint("   UPLOAD FAIL  ")
+        time.sleep(3)
         return False
 
 
