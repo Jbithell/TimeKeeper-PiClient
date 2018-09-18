@@ -9,7 +9,7 @@ import signal
 print(sys.version)
 #                   Start setting up LEDs and physical components
 GPIO.setmode(GPIO.BOARD)
-yellowLED = 10
+yellowLED = 3
 redLED = 11
 keySWITCH = 5  # Reversed
 startBUTTON = 13  # Reversed
