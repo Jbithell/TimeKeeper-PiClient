@@ -186,7 +186,7 @@ while True:
     print(GPIO.input(keySWITCH))
     print(GPIO.input(stopSWITCH))
     print(GPIO.input(startBUTTON))
-    time.sleep(1)
+    time.sleep(5)
 
 while True:
     if GPIO.input(keySWITCH):  # System is powered down
