@@ -320,6 +320,7 @@ while True:
                         #Poweroff basically
                         break
                 if GPIO.input(keySWITCH) != True:
+                    GPIO.output(redLED, GPIO.LOW)
                     time.sleep(0.5)  # Debounce
                     lcdprint(sessionData[1] + " " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
             elif GPIO.input(startBUTTON) != True:
