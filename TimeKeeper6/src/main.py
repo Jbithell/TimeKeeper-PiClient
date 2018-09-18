@@ -183,12 +183,6 @@ def hoursMinutesSeconds(input):
 #                   Start main loop
 currentMode = 0  # powered off
 while True:
-    print(GPIO.input(keySWITCH))
-    print(GPIO.input(stopSWITCH))
-    print(GPIO.input(startBUTTON))
-    time.sleep(5)
-
-while True:
     if GPIO.input(keySWITCH):  # System is powered down
         if currentMode != 0:  # If it's doing anything else power it down
             print("Powering down")
