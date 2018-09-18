@@ -11,7 +11,7 @@ print(sys.version)
 GPIO.setmode(GPIO.BOARD)
 yellowLED = 10
 redLED = 11
-keySWITCH = 8  # Reversed
+keySWITCH = 5  # Reversed
 startBUTTON = 13  # Reversed
 stopSWITCH = 7
 
