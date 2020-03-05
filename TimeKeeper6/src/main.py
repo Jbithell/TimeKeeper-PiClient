@@ -163,13 +163,15 @@ def hoursMinutesSeconds(input):
     h = int(round(h))
 
     if (h < 1):
-        h = "00"
+        h = "000"
     if (m < 1):
         m = "00"
     if (s < 1):
         s = "00"
 
     if (h < 10):
+        h = "00" + str(h)  # Pad
+    elif (h < 100):
         h = "0" + str(h)  # Pad
     if (m < 10):
         m = "0" + str(m)  # Pad
@@ -248,7 +250,7 @@ while True:
                 lcdprint("TIMEKEEPER  LOAD" + projectIDEntered)
                 sessionData = getSessionData(projectIDEntered, False)
             if sessionData:
-                lcdprint(sessionData[1] + " " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
+                lcdprint(sessionData[1] + " " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "  READY")
                 currentMode = 2  # Session start/running page
             else:
                 currentMode = 0
@@ -295,15 +297,15 @@ while True:
             if sessionRunning: #Session could have been stopped by the time you get down here
                 if sessionTimerRunning:
                     lcdprint(sessionData[1] + " " + "{}:{}".format(
-                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
+                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + " " + "{}:{}:{}".format(
                         *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
                 else:
                     lcdprint(sessionData[1] + " " + "{}:{}".format(
-                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
+                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + " " + "{}:{}:{}".format(
                         *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
                     time.sleep(0.2)
                     lcdprint(sessionData[1] + "#" + "{}:{}".format(
-                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + "   " + "{}:{}:{}".format(
+                        *hoursMinutesSeconds(sessionData[2] + sessionTimerTemp)) + " " + "{}:{}:{}".format(
                         *hoursMinutesSeconds(sessionTimerTemp)))  # Keep screen updated
                     time.sleep(0.2)
 
@@ -322,7 +324,7 @@ while True:
                 if GPIO.input(keySWITCH) != True:
                     GPIO.output(redLED, GPIO.LOW)
                     time.sleep(0.5)  # Debounce
-                    lcdprint(sessionData[1] + " " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "   READY")
+                    lcdprint(sessionData[1] + " " + "{}:{}:{}".format(*hoursMinutesSeconds(sessionData[2])) + "  READY")
             elif GPIO.input(startBUTTON) != True:
                 #Start running session
                 print("Starting")
