@@ -90,7 +90,7 @@ def webRequest(path, paramstring):
         paramstring = "?" + paramstring + "&"
     else:
         paramstring = "?"
-    url = "https://" + "jbithell.com/projects/timekeeper/api/v4/" + path + paramstring + "USERKEY=" + str(
+    url = "https://" + str(os.getenv('APIPATH', '')) + path + paramstring + "USERKEY=" + str(
         os.getenv('USERKEY', '')) + "&USERSECRET=" + str(os.getenv('USERSECRET', ''))
     print(url)
     response = urllib.urlopen(url)
